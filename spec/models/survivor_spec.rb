@@ -3,9 +3,11 @@
 RSpec.describe Survivor, type: :model do
 
   describe 'validations' do
-    let(:survivor) { FactoryGirl.create(:survivor) }
+    let(:last_location) { FactoryGirl.create(:last_location) }
+    let(:survivor) { FactoryGirl.create(:survivor, :last_location => last_location) }
 
     it 'requires a name' do
+      puts survivor.last_location
       survivor.name = nil
       expect(survivor).to_not be_valid
     end
@@ -21,6 +23,9 @@ RSpec.describe Survivor, type: :model do
     end
 
     context 'associations' do
+      let(:last_location) { FactoryGirl.create(:last_location) }
+      let(:survivor) { FactoryGirl.create(:survivor, :last_location => last_location) }
+
       it 'have one inventory' do
         survivor = Survivor.reflect_on_association(:inventory)
         expect(survivor.macro).to eql(:has_one)

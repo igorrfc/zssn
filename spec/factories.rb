@@ -8,7 +8,7 @@ FactoryGirl.define do
 
   factory :last_location do |l|
     latitude 15.465465864
-    latitude 15.465465999
+    longitude 15.465465999
     l.association :survivor
   end
 

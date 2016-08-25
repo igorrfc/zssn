@@ -1,6 +1,8 @@
 class Survivor < ActiveRecord::Base
+  has_one :last_location
+  has_one :inventory
+
   validates_presence_of :name, :age, :gender
 
-  has_one :last_location, class_name: "LastLocation"
-  has_one :inventory
+  accepts_nested_attributes_for :last_location
 end
