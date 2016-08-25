@@ -2,7 +2,7 @@
 Zombie Survival Social Network
 
 # Configure your /etc/hosts file:
-To simulate a development enviroment, we have to do some modifications on /etc/hosts file. On this documentation I'll use the api.zssn-dev.com domain:
+To simulate a development environment, we have to do some modifications on /etc/hosts file. On this documentation I'll use the api.zssn-dev.com domain:
 
 /etc/hosts
 
