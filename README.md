@@ -5,7 +5,9 @@ Zombie Survival Social Network
 To simulate a development enviroment, we have to do some modifications on /etc/hosts file. On this documentation I'll use the api.zssn-dev.com domain:
 
 /etc/hosts
+
 127.0.0.1       zssn-dev.com
+
 127.0.0.1       api.zssn-dev.com
 
 NOTE: Be sure to use the port 3000 (api.zssn-dev.com:3000)
