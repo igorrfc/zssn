@@ -43,3 +43,7 @@ curl -H "Content-Type: application/json" -X GET http://api.zssn-dev.com:3000/rep
 ###Non-infected survivors report
 
 curl -H "Content-Type: application/json" -X GET http://api.zssn-dev.com:3000/reports/non_infected_survivors
+
+###Resources average
+
+curl -H "Content-Type: application/json" -X GET http://api.zssn-dev.com:3000/reports/resources_avg

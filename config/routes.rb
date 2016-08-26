@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       collection do
         get :infected_survivors
         get :non_infected_survivors
+        get :resources_avg
       end
     end
     resources :survivors, except: [:destroy] do

@@ -63,7 +63,35 @@ RSpec.describe Api::ReportsController, type: :controller do
     end
   end
 
-  describe 'GET #non_infected_survivors' do
-    
+  describe 'GET #resources_avg' do
+    context 'There are survivors' do
+      before(:each) do
+        @resource_types_count = ResourceType.all.count
+        Survivor.create(FactoryGirl.attributes_for :survivor)
+        Survivor.create(FactoryGirl.attributes_for :survivor)
+        Survivor.create(FactoryGirl.attributes_for :survivor)
+        Survivor.create(FactoryGirl.attributes_for :survivor)
+        get :resources_avg, {}, format: :json
+      end
+
+      it 'must respond with 200 status' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'must respond with all resources listed' do
+        report_response = JSON.parse(response.body, symbolize_names: true)
+        expect(report_response.length).to eql @resource_types_count
+      end
+    end
+
+    context 'There are no survivors' do
+      before(:each) do
+        get :resources_avg, {}, format: :json
+      end
+
+      it 'must respond with 404 status' do
+        expect(response).to have_http_status(404)
+      end
+    end
   end
 end
