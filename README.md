@@ -15,6 +15,9 @@ NOTE: Be sure to use the port 3000 (api.zssn-dev.com:3000)
 #Populating Database
 Run rake db:seed to create the main resources.
 
+#API resources
+NOTE: Using curl to send requests.
+
 -> Add survivor
 
 curl -H "Content-Type: application/json" -X POST -d '{"survivor":{"name":"First Survivor",  "age":18, "gender":"m", "last_location_attributes":{"latitude":"15.465465864","longitude":"15.465465999"}}}' http://api.zssn-dev.com:3000/survivors
@@ -22,6 +25,10 @@ curl -H "Content-Type: application/json" -X POST -d '{"survivor":{"name":"First 
 -> Update survivor location
 
 curl -H "Content-Type: application/json" -X PATCH -d '{"survivor":{"last_location_attributes":{"latitude":"15.1217", "longitude":"15.2222"}}}' http://api.zssn-dev.com:3000/survivors/1/update_location
+
+-> Report infected survivor
+
+curl -H "Content-Type: application/json" -X POST -d '{"survivor":{"survivor_id":1}}' http://api.zssn-dev.com:3000/infected_reports/
 
 -> Trade resources
 

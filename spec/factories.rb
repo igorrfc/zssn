@@ -21,4 +21,8 @@ FactoryGirl.define do
     r.association :inventory
   end
 
+  factory :infected_report do |i|
+    survivor_id Faker::Number.between(1, 10)
+  end
+
 end
