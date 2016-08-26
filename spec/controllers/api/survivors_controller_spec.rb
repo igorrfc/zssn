@@ -2,17 +2,21 @@ require 'rails_helper'
 
 RSpec.describe Api::SurvivorsController, type: :controller do
   before(:all) do
-    Rails.application.load_seed
+    if ResourceType.all.count < 4
+      Rails.application.load_seed
+    end
   end
 
   describe 'GET #show' do
+    before(:each) { request.headers['Accept'] = "application/api.zssn.v1, #{Mime::JSON}" }
+    before(:each) { request.headers['Content-Type'] = Mime::JSON.to_s }
     before(:each) do
       @survivor = FactoryGirl.create :survivor
-      get :show, id: @survivor.id, format: :json
+      get :show, id: @survivor.id
     end
 
     it 'returns the information about a survivor on a hash' do
-      survivor_response = JSON.parse(response.body, symbolize_names: true)
+      survivor_response = json_response
       expect(survivor_response[:gender]).to eql(@survivor.gender)
     end
 
@@ -23,6 +27,8 @@ RSpec.describe Api::SurvivorsController, type: :controller do
 
   describe 'POST #create' do
     context 'when is successfully created' do
+      before(:each) { request.headers['Accept'] = "application/api.zssn.v1, #{Mime::JSON}" }
+      before(:each) { request.headers['Content-Type'] = Mime::JSON.to_s }
       before(:each) do
         @survivor_attributes = FactoryGirl.attributes_for :survivor
         @survivor_attributes['last_location_attributes'] = FactoryGirl.attributes_for :last_location
@@ -30,7 +36,7 @@ RSpec.describe Api::SurvivorsController, type: :controller do
       end
 
       it 'renders the json representation for the survivor record just created' do
-        survivor_response = JSON.parse(response.body, symbolize_names: true)
+        survivor_response = json_response
         expect(survivor_response[:name]).to eql @survivor_attributes[:name]
       end
 
@@ -65,7 +71,7 @@ RSpec.describe Api::SurvivorsController, type: :controller do
       end
 
       it "renders the json representation for the updated survivor last_location" do
-        survivor_response = JSON.parse(response.body, symbolize_names: true)
+        survivor_response = json_response
         expect(survivor_response[:latitude]).to eql 15.77777
       end
 
@@ -83,12 +89,12 @@ RSpec.describe Api::SurvivorsController, type: :controller do
       end
 
       it "renders an errors json" do
-        survivor_response = JSON.parse(response.body, symbolize_names: true)
+        survivor_response = json_response
         expect(survivor_response).to have_key(:errors)
       end
 
       it "renders the json errors on whye the survivor could not be created" do
-        survivor_response = JSON.parse(response.body, symbolize_names: true)
+        survivor_response = json_response
         expect(survivor_response[:errors][:longitude]).to include "can't be blank"
       end
 
