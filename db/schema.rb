@@ -11,16 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824182620) do
+ActiveRecord::Schema.define(version: 20160825175021) do
 
   create_table "inventories", force: :cascade do |t|
     t.integer  "survivor_id", limit: 4
-    t.integer  "resource_id", limit: 4
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
   end
 
-  add_index "inventories", ["resource_id"], name: "index_inventories_on_resource_id", using: :btree
   add_index "inventories", ["survivor_id"], name: "index_inventories_on_survivor_id", using: :btree
 
   create_table "last_locations", force: :cascade do |t|
@@ -33,12 +31,22 @@ ActiveRecord::Schema.define(version: 20160824182620) do
 
   add_index "last_locations", ["survivor_id"], name: "index_last_locations_on_survivor_id", using: :btree
 
-  create_table "resources", force: :cascade do |t|
+  create_table "resource_types", force: :cascade do |t|
     t.string   "description", limit: 255
     t.integer  "points",      limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
+
+  create_table "resources", force: :cascade do |t|
+    t.integer  "inventory_id",     limit: 4
+    t.integer  "resource_type_id", limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "resources", ["inventory_id"], name: "index_resources_on_inventory_id", using: :btree
+  add_index "resources", ["resource_type_id"], name: "index_resources_on_resource_type_id", using: :btree
 
   create_table "survivors", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -49,7 +57,8 @@ ActiveRecord::Schema.define(version: 20160824182620) do
     t.datetime "updated_at",                             null: false
   end
 
-  add_foreign_key "inventories", "resources"
   add_foreign_key "inventories", "survivors"
   add_foreign_key "last_locations", "survivors"
+  add_foreign_key "resources", "inventories"
+  add_foreign_key "resources", "resource_types"
 end

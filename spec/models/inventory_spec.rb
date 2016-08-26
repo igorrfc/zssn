@@ -2,16 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Inventory, type: :model do
   describe 'validations' do
-    context 'associations' do
-      it 'belong to survivor' do
-        inventory = Inventory.reflect_on_association(:survivor)
-        expect(inventory.macro).to eql(:belongs_to)
-      end
+    it { is_expected.to validate_presence_of(:survivor_id) }
 
-      it 'has many resources' do
-        inventory = Inventory.reflect_on_association(:resources)
-        expect(inventory.macro).to eql(:has_many)
-      end
+    context 'associations' do
+      it { is_expected.to belong_to(:survivor) }
+      it { is_expected.to have_many(:resources) }
     end
   end
 end

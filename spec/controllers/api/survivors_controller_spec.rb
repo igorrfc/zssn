@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::SurvivorsController, type: :controller do
+  before(:all) do
+    Rails.application.load_seed
+  end
 
   describe 'GET #show' do
     before(:each) do
@@ -66,7 +69,7 @@ RSpec.describe Api::SurvivorsController, type: :controller do
         expect(survivor_response[:latitude]).to eql 15.77777
       end
 
-      it 'must respond with 200 status' do
+      it 'must respond with status 200' do
         expect(response).to have_http_status(200)
       end
     end
@@ -90,19 +93,78 @@ RSpec.describe Api::SurvivorsController, type: :controller do
       end
 
     end
+
+    context 'when is not updated why couldnt find a survivor' do
+      before(:each) do
+        @survivor = FactoryGirl.create :survivor
+        @survivor.last_location = FactoryGirl.create :last_location
+        patch :update_location, { id: 70,
+                         survivor: { last_location_attributes: { latitude: 15.77777, longitude: @survivor.last_location.longitude } } }, format: :json
+      end
+
+      it 'must respond with 404 status' do
+        expect(response).to have_http_status(404)
+      end
+    end
   end
 
-  context 'when is not updated why couldnt find a survivor' do
+  describe 'PUT/PATCH #trade' do
     before(:each) do
-      @survivor = FactoryGirl.create :survivor
-      @survivor.last_location = FactoryGirl.create :last_location
-      patch :update_location, { id: 70,
-                       survivor: { last_location_attributes: { latitude: 15.77777, longitude: @survivor.last_location.longitude } } }, format: :json
+      @survivor1 = FactoryGirl.create :survivor
+      @survivor1.create_inventory(survivor_id: @survivor1.id)
+      @survivor2 = FactoryGirl.create :survivor
+      @survivor2.create_inventory(survivor_id: @survivor2.id)
+      @resource_1 = Resource.create(inventory_id: @survivor1.inventory.id, resource_type_id: 1)
+      @resource_2 = Resource.create(inventory_id: @survivor2.inventory.id, resource_type_id: 2)
+      @resource_3 = Resource.create(inventory_id: @survivor1.inventory.id, resource_type_id: 2)
     end
 
-    it 'must respond with 404 status' do
-      expect(response).to have_http_status(404)
+    context 'when successfully made' do
+      before(:each) do
+        patch :trade, { id: @survivor1.id, :resources => [ @resource_3.attributes ],
+                                            :survivor => { id: @survivor2.id, :resources =>  [@resource_2.attributes] } }, format: :json
+      end
+
+      it 'must respond with 200 status' do
+        expect(response).to have_http_status(200)
+      end
     end
+
+    context 'when has problems' do
+      context 'with invalid survivors' do
+        before(:each) do
+          patch :trade, { id: 170 }, format: :json
+        end
+        it 'must respond with 404 status' do
+          expect(response).to have_http_status(404)
+        end
+      end
+
+      context 'with different resource value points' do
+        before(:each) do
+          patch :trade, { id: @survivor1.id, :resources => [ @resource_1.attributes ],
+                                              :survivor => { id: @survivor2.id, :resources =>  [@resource_2.attributes] } }, format: :json
+        end
+
+        it 'must respond with 422 status' do
+          expect(response).to have_http_status(422)
+        end
+      end
+
+      context 'with invalid resources' do
+        before(:each) do
+          resource_x = Resource.create(id: 500, inventory_id: @survivor2.inventory.id, resource_type_id: 2)
+          resource_y = Resource.create(id: 501, inventory_id: @survivor1.inventory.id, resource_type_id: 2)
+          patch :trade, { id: @survivor1.id, :resources => [ resource_x.attributes ],
+                                              :survivor => { id: @survivor2.id, :resources =>  [resource_y.attributes] } }, format: :json
+        end
+
+        it 'must respond with 422 status' do
+          expect(response).to have_http_status(422)
+        end
+      end
+    end
+
   end
 
 end

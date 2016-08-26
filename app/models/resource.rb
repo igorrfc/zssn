@@ -1,3 +1,6 @@
 class Resource < ActiveRecord::Base
-  validates_presence_of :description, :points
+  belongs_to :inventory
+  belongs_to :resource_type
+
+  validates_presence_of :inventory_id, :resource_type_id
 end

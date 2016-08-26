@@ -4,7 +4,9 @@ Rails.application.routes.draw do
       member do
        patch :update_location
        put :update_location
-     end
+       patch :trade
+       put :trade
+      end
     end
   end
 

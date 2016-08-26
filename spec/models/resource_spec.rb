@@ -2,15 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Resource, type: :model do
   describe 'validations' do
-    it 'requires a description' do
-      subject.description = nil
-      expect(subject).to_not be_valid
-    end
+    it { is_expected.to validate_presence_of(:inventory_id) }
+    it { is_expected.to validate_presence_of(:resource_type_id) }
 
-    it 'requires a number of points' do
-      subject.points = nil
-      expect(subject).to_not be_valid
+    context 'associations' do
+      it { is_expected.to belong_to(:inventory) }
+      it { is_expected.to belong_to(:resource_type) }
     end
-
   end
 end

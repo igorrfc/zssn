@@ -1,6 +1,6 @@
-class CreateResources < ActiveRecord::Migration
+class CreateResourceTypes < ActiveRecord::Migration
   def change
-    create_table :resources do |t|
+    create_table :resource_types do |t|
       t.string :description
       t.integer :points
 

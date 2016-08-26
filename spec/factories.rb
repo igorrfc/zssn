@@ -12,4 +12,13 @@ FactoryGirl.define do
     l.association :survivor
   end
 
+  factory :inventory do |i|
+    i.association :survivor
+  end
+
+  factory :resource do |r|
+    resource_type_id Faker::Number.between(1, 4)
+    r.association :inventory
+  end
+
 end
